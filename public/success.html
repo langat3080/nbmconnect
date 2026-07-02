@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request Submitted</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #000; /* black background */
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #111;
+    padding: 30px 25px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255,165,0,0.5);
+}
+
+h1 {
+    color: orange;
+    margin-bottom: 20px;
+}
+
+.detail {
+    margin: 12px 0;
+    font-size: 18px;
+}
+
+p {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #ccc;
+}
+
+button {
+    margin-top: 25px;
+    padding: 14px 25px;
+    background: orange;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ff9c00;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>✅ Request Submitted</h1>
+
+    <div class="detail"><strong>Name:</strong> <span id="userName"></span></div>
+    <div class="detail"><strong>Phone:</strong> <span id="userPhone"></span></div>
+    <div class="detail"><strong>Loan Amount:</strong> <span id="loanAmount"></span></div>
+
+    <p>Your request is under review. Please wait for approval. You will be notified once it is processed.</p>
+
+    <button id="logoutBtn">Start Over</button>
+</div>
+
+<script>
+// Get details from localStorage
+const fullName = localStorage.getItem('fullName') || 'N/A';
+const phone = localStorage.getItem('phone') || 'N/A';
+const loanAmount = localStorage.getItem('loanAmount') || 'N/A';
+
+// Populate page
+document.getElementById('userName').textContent = fullName;
+document.getElementById('userPhone').textContent = phone;
+document.getElementById('loanAmount').textContent = loanAmount;
+
+// Logout / Start over button
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.clear(); // clear all stored data
+    window.location.href = 'index.html'; // redirect to first page
+});
+</script>
+
+</body>
+</html>

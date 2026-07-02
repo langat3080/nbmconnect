@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WeConnect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),
+url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80");
+
+background-size:cover;
+background-position:center;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+
+}
+
+.card{
+
+width:100%;
+max-width:390px;
+
+backdrop-filter:blur(20px);
+
+background:rgba(255,255,255,.14);
+
+border:1px solid rgba(255,255,255,.2);
+
+border-radius:28px;
+
+padding:35px 28px;
+
+box-shadow:0 25px 50px rgba(0,0,0,.35);
+
+color:white;
+
+}
+
+.back{
+
+font-size:26px;
+cursor:pointer;
+margin-bottom:18px;
+
+}
+
+.logo{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-bottom:25px;
+
+}
+
+.logo-circle{
+
+width:75px;
+height:75px;
+border-radius:50%;
+
+border:2px dashed rgba(255,255,255,.6);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:13px;
+
+margin-bottom:12px;
+
+}
+
+.logo h2{
+
+font-size:28px;
+font-weight:700;
+
+}
+
+.logo span{
+
+color:#7dc8ff;
+
+}
+
+.title{
+
+font-size:22px;
+font-weight:600;
+
+margin-bottom:22px;
+
+}
+
+.toggle{
+
+display:flex;
+background:rgba(255,255,255,.12);
+padding:4px;
+border-radius:30px;
+margin-bottom:22px;
+
+}
+
+.toggle button{
+
+flex:1;
+padding:11px;
+border:none;
+border-radius:25px;
+background:none;
+color:white;
+cursor:pointer;
+font-weight:500;
+
+}
+
+.toggle button.active{
+
+background:white;
+color:#0d5fd6;
+
+}
+
+label{
+
+display:block;
+margin-bottom:8px;
+font-size:14px;
+
+}
+
+.input{
+
+display:flex;
+align-items:center;
+
+background:rgba(255,255,255,.12);
+
+border:1px solid rgba(255,255,255,.25);
+
+border-radius:14px;
+
+padding:14px;
+
+margin-bottom:18px;
+
+}
+
+.input span{
+
+margin-right:10px;
+
+}
+
+input{
+
+width:100%;
+border:none;
+background:none;
+outline:none;
+color:white;
+font-size:15px;
+
+}
+
+input::placeholder{
+
+color:rgba(255,255,255,.7);
+
+}
+
+.sign{
+
+width:100%;
+padding:15px;
+
+border:none;
+border-radius:14px;
+
+background:white;
+
+font-size:17px;
+font-weight:600;
+
+cursor:pointer;
+
+color:#0d5fd6;
+
+margin-top:10px;
+
+}
+
+.or{
+
+display:flex;
+align-items:center;
+margin:25px 0;
+
+}
+
+.or::before,
+.or::after{
+
+content:"";
+flex:1;
+height:1px;
+background:rgba(255,255,255,.3);
+
+}
+
+.or span{
+
+padding:0 12px;
+
+}
+
+.bio{
+
+width:100%;
+
+padding:14px;
+
+border-radius:14px;
+
+border:1px solid rgba(255,255,255,.3);
+
+background:rgba(255,255,255,.08);
+
+color:white;
+
+cursor:pointer;
+
+}
+
+.links{
+
+margin-top:22px;
+text-align:center;
+
+}
+
+.links a{
+
+display:block;
+color:white;
+text-decoration:none;
+margin:10px 0;
+
+}
+
+.bottom{
+
+margin-top:15px;
+font-size:14px;
+
+}
+
+.bottom strong{
+
+color:#7dc8ff;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="back">←</div>
+
+<div class="logo">
+
+<div class="logo-circle">
+YOUR LOGO
+</div>
+
+<h2>We<span>Connect</span></h2>
+
+</div>
+
+<div class="title">
+Create Profile
+</div>
+
+<div class="toggle">
+
+<button class="active" onclick="switchTab(this,'email')">
+Email
+</button>
+
+<button onclick="switchTab(this,'phone')">
+Mobile
+</button>
+
+</div>
+
+<label id="lbl">
+Email Address
+</label>
+
+<div class="input">
+
+<span id="icon">✉️</span>
+
+<input
+id="user"
+type="email"
+placeholder="Enter email">
+
+</div>
+
+<label>
+PIN
+</label>
+
+<div class="input">
+
+<span>🔒</span>
+
+<input
+type="password"
+maxlength="4"
+placeholder="••••">
+
+</div>
+
+<button class="sign">
+Sign In
+</button>
+
+<div class="or">
+<span>OR</span>
+</div>
+
+<button class="bio">
+🔐 Face Recognition / Fingerprint
+</button>
+
+<div class="links">
+
+<a href="#">
+Forgot Password?
+</a>
+
+<div class="bottom">
+
+Don't have an account?
+
+<strong>Open Account</strong>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function switchTab(btn,type){
+
+document
+.querySelectorAll(".toggle button")
+.forEach(b=>b.classList.remove("active"));
+
+btn.classList.add("active");
+
+const input=document.getElementById("user");
+
+const label=document.getElementById("lbl");
+
+const icon=document.getElementById("icon");
+
+if(type==="email"){
+
+label.innerHTML="Email Address";
+
+input.type="email";
+
+input.placeholder="Enter email";
+
+icon.innerHTML="✉️";
+
+}else{
+
+label.innerHTML="Mobile Number";
+
+input.type="tel";
+
+input.placeholder="+263 7X XXX XXXX";
+
+icon.innerHTML="📱";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
