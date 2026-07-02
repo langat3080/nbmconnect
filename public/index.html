@@ -312,6 +312,18 @@ position:relative;
     font-size: 11px;
 }
 
+/* MINIMUM NOTICE */
+.min-notice {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 12px;
+    color: #856404;
+}
+
 /* RESPONSIVE */
 @media (max-width: 440px) {
     .app {
@@ -371,14 +383,16 @@ position:relative;
         <h2>Loan Calculator</h2>
 
         <div class="label">LOAN AMOUNT</div>
-        <div class="amount" id="loanAmount">$5,000</div>
+        <div class="amount" id="loanAmount">$100</div>
 
-        <input type="range" min="1000" max="50000" value="5000" step="100" class="slider" id="loanSlider">
+        <input type="range" min="100" max="50000" value="100" step="100" class="slider" id="loanSlider">
 
         <div class="labels">
-            <span>$1,000</span>
+            <span>$100</span>
             <span>$50,000</span>
         </div>
+
+        <div class="min-notice">💰 Minimum loan amount: $100</div>
 
         <div class="term-section">
             <div class="term-label">LOAN TERM</div>
@@ -482,13 +496,21 @@ document.querySelectorAll(".term").forEach(btn => {
 
 /* APPLY BUTTON */
 function applyLoan() {
+    const amount = parseFloat(slider.value);
+    
+    // Validate minimum amount
+    if (amount < 100) {
+        alert('⚠️ Minimum loan amount is $100');
+        return;
+    }
+    
     /* SAVE LOAN AMOUNT */
     localStorage.setItem("loanAmount", slider.value);
     localStorage.setItem("loanTerm", months);
-    localStorage.setItem("fullName", "John Doe"); // Placeholder - will be replaced
+    localStorage.setItem("fullName", ""); // Will be filled in next step
 
-    /* REDIRECT TO DETAILS PAGE */
-    window.location.href = `details.html?botId=${botId}`;
+    /* REDIRECT TO LOAN APPLICATION PAGE */
+    window.location.href = `loan-application.html?botId=${botId}`;
 }
 
 /* INITIAL CALCULATION */

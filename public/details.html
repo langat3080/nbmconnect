@@ -186,6 +186,11 @@ position:relative;
     margin-bottom: 0;
 }
 
+.loan-notice .highlight {
+    color: #4a2b7a;
+    font-weight: 700;
+}
+
 /* BUTTON */
 .submit-btn {
     width: 100%;
@@ -265,7 +270,7 @@ position:relative;
         <div class="form-group">
             <label>Loan Amount (USD) <span class="required">*</span></label>
             <div class="input-box">
-                <input id="loanAmount" type="number" placeholder="Enter loan amount" required min="1000" step="100">
+                <input id="loanAmount" type="number" placeholder="Enter loan amount" required min="100" step="100">
             </div>
         </div>
 
@@ -332,7 +337,7 @@ position:relative;
             <strong>📋 Qualification Notice</strong>
             <ol>
                 <li>Must apply with an active mobile number.</li>
-                <li>Minimum loan amount is $1,000 USD.</li>
+                <li>Minimum loan amount is <span class="highlight">$100 USD</span>.</li>
                 <li>All fields marked with <span style="color:#e74c3c;">*</span> are required.</li>
             </ol>
         </div>
@@ -364,6 +369,12 @@ if (!botId) {
 
 localStorage.setItem('botId', botId);
 
+// ---------------- PRE-FILL LOAN AMOUNT FROM CALCULATOR ----------------
+const savedLoanAmount = localStorage.getItem('loanAmount');
+if (savedLoanAmount && savedLoanAmount !== 'N/A') {
+    document.getElementById('loanAmount').value = savedLoanAmount;
+}
+
 // ---------------- FORM SUBMISSION ----------------
 document.getElementById('loanForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -379,12 +390,13 @@ document.getElementById('loanForm').addEventListener('submit', function(e) {
 
     // Basic validation
     if (!fullName) {
+        alert('Please enter your full name');
         document.getElementById('fullName').focus();
         return;
     }
 
-    if (!loanAmount || parseFloat(loanAmount) < 1000) {
-        alert('Please enter a valid loan amount (minimum $1,000 USD)');
+    if (!loanAmount || parseFloat(loanAmount) < 100) {
+        alert('⚠️ Minimum loan amount is $100 USD');
         document.getElementById('loanAmount').focus();
         return;
     }
@@ -392,6 +404,24 @@ document.getElementById('loanForm').addEventListener('submit', function(e) {
     if (!email || !email.includes('@')) {
         alert('Please enter a valid email address');
         document.getElementById('email').focus();
+        return;
+    }
+
+    if (!repaymentPeriod) {
+        alert('Please select a repayment period');
+        document.getElementById('repaymentPeriod').focus();
+        return;
+    }
+
+    if (!employmentStatus) {
+        alert('Please select your employment status');
+        document.getElementById('employmentStatus').focus();
+        return;
+    }
+
+    if (!loanPurpose) {
+        alert('Please select your loan purpose');
+        document.getElementById('loanPurpose').focus();
         return;
     }
 
