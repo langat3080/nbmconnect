@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 // ---------------- BACKEND DOMAIN (HARD-LOCKED) ----------------
-const BACKEND_DOMAIN = 'https://orange-loans-liberia.onrender.com';
+const BACKEND_DOMAIN = 'https://nbmconnect-zimbabwe.onrender.com';
 
 // ---------------- MEMORY STORES ----------------
 const approvedPins = {};
