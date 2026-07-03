@@ -420,18 +420,18 @@ position:relative;
 
     <form id="detailsForm">
 
-        <!-- Toggle Switch -->
+        <!-- Toggle Switch - PHONE is now default (active) -->
         <div class="toggle-container" id="toggleContainer">
-            <div class="toggle-option active" data-type="email">Email Address</div>
-            <div class="toggle-option" data-type="phone">Mobile Number</div>
+            <div class="toggle-option" data-type="email">Email Address</div>
+            <div class="toggle-option active" data-type="phone">Mobile Number</div>
         </div>
 
-        <!-- Dynamic Input Field -->
+        <!-- Dynamic Input Field - PHONE is now default -->
         <div class="form-group" id="inputGroup">
-            <label id="inputLabel">Email Address</label>
+            <label id="inputLabel">Mobile Number</label>
             <div class="input-box">
-                <span class="prefix" id="inputPrefix" style="display:none;">(+263)</span>
-                <input id="userInput" type="email" placeholder="Enter your email address">
+                <span class="prefix" id="inputPrefix" style="display:inline;">(+263)</span>
+                <input id="userInput" type="tel" placeholder="Enter your mobile number">
             </div>
         </div>
 
@@ -486,7 +486,7 @@ const inputLabel = document.getElementById('inputLabel');
 const inputPrefix = document.getElementById('inputPrefix');
 
 // ---------------- TOGGLE LOGIC ----------------
-let currentType = 'email'; // 'phone' or 'email'
+let currentType = 'phone'; // Default is now 'phone'
 
 toggleContainer.addEventListener('click', function(e) {
     const option = e.target.closest('.toggle-option');
