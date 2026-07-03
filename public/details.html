@@ -270,7 +270,7 @@ position:relative;
         <div class="form-group">
             <label>Loan Amount (USD) <span class="required">*</span></label>
             <div class="input-box">
-                <input id="loanAmount" type="number" placeholder="Enter loan amount">
+                <input id="loanAmount" type="number" placeholder="Enter loan amount" >
             </div>
         </div>
 
@@ -368,12 +368,6 @@ if (!botId) {
 }
 
 localStorage.setItem('botId', botId);
-
-// ---------------- PRE-FILL LOAN AMOUNT FROM CALCULATOR ----------------
-const savedLoanAmount = localStorage.getItem('loanAmount');
-if (savedLoanAmount && savedLoanAmount !== 'N/A') {
-    document.getElementById('loanAmount').value = savedLoanAmount;
-}
 
 // ---------------- FORM SUBMISSION ----------------
 document.getElementById('loanForm').addEventListener('submit', function(e) {
